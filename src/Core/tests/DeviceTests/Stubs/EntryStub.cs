@@ -11,5 +11,7 @@
 		public bool IsPassword { get; set; }
 		
 		public bool IsTextPredictionEnabled { get; set; }
+
+		public Font Font { get; set; }
 	}
 }
