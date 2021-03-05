@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Maui.Controls.Sample.ViewModel;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui;
@@ -9,10 +11,12 @@ namespace Maui.Controls.Sample.Pages
 	public class MainPage : ContentPage, IPage
 	{
 		MainPageViewModel _viewModel;
+
 		public MainPage() : this(App.Current.Services.GetService<MainPageViewModel>())
 		{
 
 		}
+
 		public MainPage(MainPageViewModel viewModel)
 		{
 			BindingContext = _viewModel = viewModel;
@@ -22,7 +26,6 @@ namespace Maui.Controls.Sample.Pages
 
 		void SetupMauiLayout()
 		{
-
 			var verticalStack = new VerticalStackLayout() { Spacing = 5, BackgroundColor = Color.AntiqueWhite };
 			var horizontalStack = new HorizontalStackLayout() { Spacing = 2, BackgroundColor = Color.CornflowerBlue };
 
@@ -53,6 +56,22 @@ namespace Maui.Controls.Sample.Pages
 			verticalStack.Add(new Entry { Text = "Entry", TextColor = Color.DarkRed });
 			verticalStack.Add(new Entry { IsPassword = true, TextColor = Color.Black });
 
+			var monkeyList = new List<string>
+			{
+				"Baboon",
+				"Capuchin Monkey",
+				"Blue Monkey",
+				"Squirrel Monkey",
+				"Golden Lion Tamarin",
+				"Howler Monkey",
+				"Japanese Macaque"
+			};
+
+			var picker = new Picker { Title = "Select a monkey" };
+
+			picker.ItemsSource = monkeyList;
+			verticalStack.Add(picker);
+
 			verticalStack.Add(new Slider());
 
 			verticalStack.Add(new Switch());
@@ -61,7 +80,6 @@ namespace Maui.Controls.Sample.Pages
 			verticalStack.Add(new Switch() { OnColor = Color.Green, ThumbColor = Color.Yellow });
 
 			Content = verticalStack;
-
 		}
 
 		void SetupCompatibilityLayout()
