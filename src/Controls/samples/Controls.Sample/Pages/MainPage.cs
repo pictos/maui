@@ -51,6 +51,14 @@ namespace Maui.Controls.Sample.Pages
 
 			verticalStack.Add(horizontalStack);
 
+			verticalStack.Add(new Button { Text = "This should be BIG text!", FontSize = 24 });
+			verticalStack.Add(new Button { Text = "This should be BOLD text!", FontAttributes = FontAttributes.Bold });
+			verticalStack.Add(new Button { Text = "This should be a CUSTOM font!", FontFamily = "Dokdo" });
+
+			verticalStack.Add(new Entry { Text = "This should be BIG text!", FontSize = 24 });
+			verticalStack.Add(new Entry { Text = "This should be BOLD text!", FontAttributes = FontAttributes.Bold });
+			verticalStack.Add(new Entry { Text = "This should be a CUSTOM font!", FontFamily = "Dokdo" });
+
 			verticalStack.Add(new Entry());
 			verticalStack.Add(new Entry { Text = "Entry", TextColor = Color.DarkRed });
 			verticalStack.Add(new Entry { IsPassword = true, TextColor = Color.Black });

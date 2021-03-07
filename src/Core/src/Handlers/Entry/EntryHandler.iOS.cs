@@ -1,4 +1,6 @@
-﻿using CoreGraphics;
+﻿using System;
+using CoreGraphics;
+using Microsoft.Extensions.DependencyInjection;
 using UIKit;
 
 namespace Microsoft.Maui.Handlers
@@ -44,6 +46,15 @@ namespace Microsoft.Maui.Handlers
 		public static void MapIsTextPredictionEnabled(EntryHandler handler, IEntry entry)
 		{
 			handler.TypedNativeView?.UpdateIsTextPredictionEnabled(entry);
+		}
+
+		public static void MapFont(EntryHandler handler, IEntry entry)
+		{
+			var services = App.Current?.Services
+				?? throw new InvalidOperationException($"Unable to find service provider, the App.Current.Services was null.");
+			var fontManager = services.GetRequiredService<IFontManager>();
+
+			handler.TypedNativeView?.UpdateFont(entry, fontManager);
 		}
 	}
 }

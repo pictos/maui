@@ -45,5 +45,11 @@ namespace Microsoft.Maui
 			else
 				textField.AutocorrectionType = UITextAutocorrectionType.No;
 		}
+
+		public static void UpdateFont(this UITextField textField, IEntry entry, IFontManager fontManager)
+		{
+			var uiFont = fontManager.GetFont(entry.Font);
+			textField.Font = uiFont;
+		}
 	}
 }

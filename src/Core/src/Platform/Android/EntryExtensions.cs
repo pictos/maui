@@ -1,4 +1,5 @@
-﻿using Android.Content.Res;
+﻿using Android.Util;
+using Android.Content.Res;
 using Android.Text;
 using Android.Widget;
 
@@ -58,6 +59,17 @@ namespace Microsoft.Maui
 		public static void UpdateIsTextPredictionEnabled(this EditText editText, IEntry entry)
 		{
 			editText.SetInputType(entry);
+		}
+
+		public static void UpdateFont(this EditText editText, IEntry entry, IFontManager fontManager)
+		{
+			var font = entry.Font;
+
+			var tf = fontManager.GetTypeface(font);
+			editText.Typeface = tf;
+
+			var sp = fontManager.GetScaledPixel(font);
+			editText.SetTextSize(ComplexUnitType.Sp, sp);
 		}
 	}
 }

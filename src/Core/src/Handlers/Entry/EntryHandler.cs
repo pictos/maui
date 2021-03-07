@@ -7,7 +7,8 @@
 			[nameof(IEntry.Text)] = MapText,
 			[nameof(IEntry.TextColor)] = MapTextColor,
 			[nameof(IEntry.IsPassword)] = MapIsPassword,
-			[nameof(IEntry.IsTextPredictionEnabled)] = MapIsTextPredictionEnabled
+			[nameof(IEntry.IsTextPredictionEnabled)] = MapIsTextPredictionEnabled,
+			[nameof(ILabel.Font)] = MapFont,
 		};
 
 		public EntryHandler() : base(EntryMapper)
