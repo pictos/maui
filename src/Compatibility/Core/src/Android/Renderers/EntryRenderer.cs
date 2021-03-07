@@ -309,6 +309,7 @@ namespace Microsoft.Maui.Controls.Compatibility.Platform.Android
 		protected abstract void UpdateColor();
 		protected abstract void UpdateTextColor(Color color);
 
+		[PortHandler]
 		protected virtual void UpdateFont()
 		{
 			EditText.Typeface = Element.ToTypeface();
