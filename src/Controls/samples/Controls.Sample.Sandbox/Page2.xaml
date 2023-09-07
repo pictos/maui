@@ -1,0 +1,10 @@
+﻿<ContentPage
+    x:Class="Maui.Controls.Sample.Page2"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:Maui.Controls.Sample"
+    local:ShellToolbarExtensions.ToolbarBackgroundColor="Pink"
+    local:ShellToolbarExtensions.ToolbarFontSize="8">
+
+    <Button Clicked="Button_Clicked" Text="Hellow world" />
+</ContentPage>

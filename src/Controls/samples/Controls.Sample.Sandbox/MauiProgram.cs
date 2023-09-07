@@ -20,7 +20,7 @@ namespace Maui.Controls.Sample
 		protected override Window CreateWindow(IActivationState activationState)
 		{
 			// To test shell scenarios, change this to true
-			bool useShell = false;
+			bool useShell = true;
 
 			if (!useShell)
 			{
