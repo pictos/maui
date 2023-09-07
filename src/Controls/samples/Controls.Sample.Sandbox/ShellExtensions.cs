@@ -96,6 +96,7 @@ public static class ShellToolbarExtensions
 			toolbar.BarBackground = color;
 #endif
 		};
+
 		shell.CurrentItem.PropertyChanged += async (s, e) =>
 		{
 			System.Diagnostics.Debug.WriteLine($"The property is: {e.PropertyName}");
