@@ -9,17 +9,22 @@ namespace Microsoft.Maui.Handlers
 	{
 		StackNavigationManager? _stackNavigationManager;
 		internal StackNavigationManager? StackNavigationManager => _stackNavigationManager;
+		
+		/// <summary>
+		/// A <see cref="Func{TResult}"/> That will return a new instance of <see cref="StackNavigationManager"/> to be
+		/// used by NavigationViewHandler.
+		/// </summary>
+		public static Func<IMauiContext, StackNavigationManager>? StackNavigationManagerFactory { get; set; }
 
 		protected override View CreatePlatformView()
 		{
-			LayoutInflater? li = CreateNavigationManager().MauiContext?.GetLayoutInflater();
+			LayoutInflater? li = CreateNavigationManager().MauiContext.GetLayoutInflater();
 			_ = li ?? throw new InvalidOperationException($"LayoutInflater cannot be null");
 
 			var view = li.Inflate(Resource.Layout.fragment_backstack, null).JavaCast<FragmentContainerView>();
 			_ = view ?? throw new InvalidOperationException($"Resource.Layout.navigationlayout view not found");
 			return view;
 		}
-
 
 		void OnViewChildAdded(object? sender, ViewGroup.ChildViewAddedEventArgs e)
 		{
@@ -30,7 +35,10 @@ namespace Microsoft.Maui.Handlers
 		{
 			_ = MauiContext ?? throw new InvalidOperationException($"{nameof(MauiContext)} should have been set by base class.");
 
-			return _stackNavigationManager ??= new StackNavigationManager(MauiContext);
+			if (StackNavigationManagerFactory is null)
+				return _stackNavigationManager ??= new StackNavigationManager(MauiContext);
+
+			return _stackNavigationManager ??=StackNavigationManagerFactory(MauiContext);
 		}
 
 		protected override void ConnectHandler(View platformView)

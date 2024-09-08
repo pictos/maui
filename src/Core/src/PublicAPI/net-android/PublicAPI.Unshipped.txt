@@ -1,1 +1,3 @@
 #nullable enable
+static Microsoft.Maui.Handlers.NavigationViewHandler.StackNavigationManagerFactory.get -> System.Func<Microsoft.Maui.IMauiContext!, Microsoft.Maui.Platform.StackNavigationManager!>?
+static Microsoft.Maui.Handlers.NavigationViewHandler.StackNavigationManagerFactory.set -> void
