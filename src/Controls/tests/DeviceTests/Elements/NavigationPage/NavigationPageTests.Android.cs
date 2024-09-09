@@ -8,6 +8,7 @@ using Microsoft.Maui;
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Handlers;
 using Microsoft.Maui.DeviceTests.Stubs;
+using Microsoft.Maui.Handlers;
 using Microsoft.Maui.Platform;
 using Xunit;
 
@@ -46,6 +47,27 @@ namespace Microsoft.Maui.DeviceTests
 				await navPage.Navigation.PopAsync();
 				Assert.False(failed);
 			});
+		}
+		
+		[Fact(DisplayName = "Instantiate a StackNavigationManager")]
+		public async Task InstantiateStackNavigationManager()
+		{
+			NavigationViewHandler.StackNavigationManagerFactory =
+				(mauiContext) => new StackNavigationManager(mauiContext);
+			
+			SetupBuilder();
+			var page = new ContentPage { Title = "Page Title" };
+			var navPage = new NavigationPage(page);
+			
+			
+			await CreateHandlerAndAddToWindow<WindowHandlerStub>(new Window(navPage), async (handler) =>
+			{
+				var navHandler = (navPage.Handler as NavigationViewHandler);
+				Assert.NotNull(navHandler);
+				Assert.NotNull(navHandler.StackNavigationManager);
+				await OnLoadedAsync(page);
+			});
+
 		}
 	}
 }
