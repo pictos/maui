@@ -1242,10 +1242,7 @@ namespace Microsoft.Maui.Controls.Handlers.Compatibility
 
 				var childView = (Child?.Handler as IPlatformViewHandler)?.ViewController?.View;
 
-				if (childView is not null)
-				{
-					childView.Frame = View.Bounds;
-				}
+				UIViewExtensions.AdjustBounds(childView, View);
 			}
 
 			public override void ViewDidLayoutSubviews()
