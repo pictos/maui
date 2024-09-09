@@ -6,6 +6,13 @@ namespace Microsoft.Maui.Handlers
 	public partial class NavigationViewHandler : ViewHandler<IStackNavigationView, Frame>
 	{
 		StackNavigationManager? _navigationManager;
+		
+		/// <summary>
+		/// A <see cref="Func{TResult}"/> That will return a new instance of <see cref="StackNavigationManager"/> to be
+		/// used by NavigationViewHandler.
+		/// </summary>
+		public static Func<IMauiContext, StackNavigationManager>? StackNavigationManagerFactory { get; set; }
+		
 		protected override Frame CreatePlatformView()
 		{
 			_navigationManager = CreateNavigationManager();
@@ -38,8 +45,14 @@ namespace Microsoft.Maui.Handlers
 
 
 		// this should move to a factory method
-		protected virtual StackNavigationManager CreateNavigationManager() =>
-			_navigationManager ??= new StackNavigationManager(MauiContext ?? throw new InvalidOperationException("MauiContext cannot be null"));
+		protected virtual StackNavigationManager CreateNavigationManager()
+		{
+			_ = MauiContext ?? throw new InvalidOperationException("MauiContext cannot be null");
+			if (StackNavigationManagerFactory is null)
+				return _navigationManager ??= new StackNavigationManager(MauiContext);
+			
+			return _navigationManager ??= StackNavigationManagerFactory(MauiContext);
+		}
 	}
 }
 
