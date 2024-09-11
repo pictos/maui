@@ -1,1 +1,3 @@
 #nullable enable
+static Microsoft.Maui.Handlers.ElementHandler<TVirtualView, TPlatformView>.PlatformElementFactory.get -> System.Func<Microsoft.Maui.Handlers.ElementHandler<TVirtualView!, TPlatformView!>!, TPlatformView!>?
+static Microsoft.Maui.Handlers.ElementHandler<TVirtualView, TPlatformView>.PlatformElementFactory.set -> void
