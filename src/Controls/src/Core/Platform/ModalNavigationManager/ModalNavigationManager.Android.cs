@@ -256,6 +256,14 @@ namespace Microsoft.Maui.Controls.Platform
 
 				dialog.Window.SetBackgroundDrawable(TransparentColorDrawable);
 
+				var activityWindow = _mauiWindowContext.Context?.GetActivity()?.Window;
+				if (activityWindow is not null)
+				{
+					System.Diagnostics.Debug.Assert(activityWindow.Attributes is not null);
+					var flags = activityWindow.Attributes.Flags;
+					dialog.Window.SetFlags(flags, flags);
+				}
+
 				return dialog;
 			}
 
