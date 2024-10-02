@@ -254,14 +254,16 @@ namespace Microsoft.Maui.Controls.Platform
 				if (dialog is null || dialog.Window is null)
 					throw new InvalidOperationException($"{dialog} or {dialog?.Window} is null, and it's invalid");
 
-				dialog.Window.SetBackgroundDrawable(TransparentColorDrawable);
+				var dialogWindow = dialog.Window;
+
+				dialogWindow.SetBackgroundDrawable(TransparentColorDrawable);
 
 				var activityWindow = _mauiWindowContext.Context?.GetActivity()?.Window;
 				if (activityWindow is not null)
 				{
 					System.Diagnostics.Debug.Assert(activityWindow.Attributes is not null);
 					var flags = activityWindow.Attributes.Flags;
-					dialog.Window.SetFlags(flags, flags);
+					dialogWindow.SetFlags(flags, flags);
 				}
 
 				return dialog;
@@ -332,6 +334,7 @@ namespace Microsoft.Maui.Controls.Platform
 			{
 				base.OnCreate(savedInstanceState);
 				SetStyle(DialogFragment.StyleNormal, Resource.Style.Maui_MainTheme_NoActionBar);
+
 			}
 
 			public override void OnStart()
@@ -342,6 +345,13 @@ namespace Microsoft.Maui.Controls.Platform
 
 				if (dialog is null || dialog.Window is null || View is null)
 					return;
+
+				var dialogWindow = this.Dialog!.Window;
+
+#pragma warning disable CA1416 // Validate platform compatibility
+				System.Diagnostics.Debug.Assert(dialogWindow?.InsetsController is not null);
+				var controller = dialogWindow.InsetsController;
+				controller?.Hide(WindowInsets.Type.SystemBars());
 
 				int width = ViewGroup.LayoutParams.MatchParent;
 				int height = ViewGroup.LayoutParams.MatchParent;
