@@ -7,6 +7,8 @@ public partial class MainPage : ContentPage
 	{
 		InitializeComponent();
 
+		//NavigationPage.SetHasNavigationBar(this, false);
+
 		var btn = new Button()
 		{
 			Text = "Modal",

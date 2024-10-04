@@ -334,9 +334,9 @@ namespace Microsoft.Maui.Controls.Platform
 			{
 				base.OnCreate(savedInstanceState);
 				SetStyle(DialogFragment.StyleNormal, Resource.Style.Maui_MainTheme_NoActionBar);
-
 			}
 
+			[System.Diagnostics.CodeAnalysis.SuppressMessage("Interoperability", "CA1416:Validate platform compatibility", Justification = "The minimal API supported is 21")]
 			public override void OnStart()
 			{
 				base.OnStart();
@@ -346,9 +346,8 @@ namespace Microsoft.Maui.Controls.Platform
 				if (dialog is null || dialog.Window is null || View is null)
 					return;
 
-				var dialogWindow = this.Dialog!.Window;
+				var dialogWindow = dialog.Window;
 
-#pragma warning disable CA1416 // Validate platform compatibility
 				System.Diagnostics.Debug.Assert(dialogWindow?.InsetsController is not null);
 				var controller = dialogWindow.InsetsController;
 				controller?.Hide(WindowInsets.Type.SystemBars());
