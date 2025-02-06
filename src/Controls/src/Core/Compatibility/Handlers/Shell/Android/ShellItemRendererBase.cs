@@ -5,6 +5,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Android.Runtime;
 using Android.Views;
 using AndroidX.Fragment.App;
 using Microsoft.Maui.Controls.Internals;
@@ -13,6 +14,8 @@ using Microsoft.Maui.Graphics;
 
 namespace Microsoft.Maui.Controls.Platform.Compatibility
 {
+
+#pragma warning disable RS0016 // Add public types and members to the declared API
 	public abstract class ShellItemRendererBase : Fragment, IShellItemRenderer
 	{
 		#region ShellItemView
@@ -38,6 +41,18 @@ namespace Microsoft.Maui.Controls.Platform.Compatibility
 		protected ShellItemRendererBase(IShellContext shellContext)
 		{
 			ShellContext = shellContext;
+		}
+
+		protected ShellItemRendererBase()
+		{
+		}
+
+		protected ShellItemRendererBase(nint javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
+		{
+		}
+
+		protected ShellItemRendererBase(int contentLayoutId) : base(contentLayoutId)
+		{
 		}
 
 		protected ShellSection ShellSection
@@ -443,3 +458,4 @@ namespace Microsoft.Maui.Controls.Platform.Compatibility
 		}
 	}
 }
+#pragma warning restore RS0016 // Add public types and members to the declared API

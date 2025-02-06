@@ -6,6 +6,7 @@ using System.ComponentModel;
 using Android.Content;
 using Android.Graphics.Drawables;
 using Android.OS;
+using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Google.Android.Material.BottomNavigation;
@@ -22,6 +23,7 @@ using Orientation = Android.Widget.Orientation;
 
 namespace Microsoft.Maui.Controls.Platform.Compatibility
 {
+#pragma warning disable RS0016 // Add public types and members to the declared API
 	public class ShellItemRenderer : ShellItemRendererBase, NavigationBarView.IOnItemSelectedListener, IAppearanceObserver
 	{
 		#region IOnItemSelectedListener
@@ -68,8 +70,21 @@ namespace Microsoft.Maui.Controls.Platform.Compatibility
 		{
 		}
 
+		//public ShellItemRenderer()
+		//{
+		//}
+
+		//public ShellItemRenderer(nint javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
+		//{
+		//}
+
+		//public ShellItemRenderer(int contentLayoutId) : base(contentLayoutId)
+		//{
+		//}
+
 		public override AView OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
 		{
+			_ = ShellContext;
 			base.OnCreateView(inflater, container, savedInstanceState);
 
 			var context = MauiContext.Context;
