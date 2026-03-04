@@ -24,6 +24,7 @@ namespace Microsoft.Maui.Controls.Xaml
 		public static readonly IList<XmlName> Skips = [
 			XmlName.xArguments,
 			XmlName.xClass,
+			XmlName.xClassModifier,
 			XmlName.xDataType,
 			XmlName.xFactoryMethod,
 			XmlName.xFieldModifier,
@@ -64,7 +65,7 @@ namespace Microsoft.Maui.Controls.Xaml
 					return;
 				if (parentElement.SkipProperties.Contains(propertyName))
 					return;
-				if (propertyName.Equals(XamlParser.McUri, "Ignorable"))
+				if (propertyName.Equals(XmlName.mcIgnorable))
 					return;
 				SetPropertyValue(source, propertyName, value, Context.RootElement, node, Context, node);
 			}

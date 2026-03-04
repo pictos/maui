@@ -13,8 +13,10 @@ using AndroidX.Core.View;
 using AndroidX.Fragment.App;
 using AndroidX.ViewPager.Widget;
 using AndroidX.ViewPager2.Widget;
+using Google.Android.Material.AppBar;
 using Google.Android.Material.Tabs;
 using Microsoft.Extensions.Logging;
+using Microsoft.Maui.Platform;
 using AToolbar = AndroidX.AppCompat.Widget.Toolbar;
 using AView = Android.Views.View;
 
@@ -66,7 +68,7 @@ namespace Microsoft.Maui.Controls.Platform.Compatibility
 		#endregion IOnClickListener
 
 		readonly IShellContext _shellContext;
-		AView _rootView;
+		CoordinatorLayout _rootView;
 		bool _selecting;
 		TabLayout _tablayout;
 		IShellTabLayoutAppearanceTracker _tabLayoutAppearanceTracker;
@@ -101,7 +103,9 @@ namespace Microsoft.Maui.Controls.Platform.Compatibility
 			var context = Context;
 			var root = PlatformInterop.CreateShellCoordinatorLayout(context);
 			var appbar = PlatformInterop.CreateShellAppBar(context, Resource.Attribute.appBarLayoutStyle, root);
-			ViewCompat.SetOnApplyWindowInsetsListener(appbar, new WindowsListener());
+
+			MauiWindowInsetListener.SetupViewWithLocalListener(root);
+
 			int actionBarHeight = context.GetActionBarHeight();
 
 			var shellToolbar = new Toolbar(shellSection);
@@ -151,34 +155,6 @@ namespace Microsoft.Maui.Controls.Platform.Compatibility
 			return _rootView = root;
 		}
 
-		// Temporary workaround:
-		// Android 15 / API 36 removed the prior opt‑out path for edge‑to‑edge
-		// (legacy "edge to edge ignore" + decor fitting). This placeholder exists
-		// so we can keep apps from regressing (content accidentally covered by
-		// system bars) until a proper, unified edge‑to‑edge + system bar inset
-		// configuration API is implemented in MAUI.
-		//
-		// NOTE:
-		// - Keep this minimal.
-		// - Will be replaced by the planned comprehensive window insets solution.
-		// - Do not extend; add new logic to the forthcoming implementation instead.
-		internal class WindowsListener : Java.Lang.Object, IOnApplyWindowInsetsListener
-		{
-			public WindowInsetsCompat OnApplyWindowInsets(AView v, WindowInsetsCompat insets)
-			{
-				if (insets == null || v == null)
-					return insets;
-
-				var systemBars = insets.GetInsets(WindowInsetsCompat.Type.SystemBars());
-				var displayCutout = insets.GetInsets(WindowInsetsCompat.Type.DisplayCutout());
-				var topInset = Math.Max(systemBars?.Top ?? 0, displayCutout?.Top ?? 0);
-
-				v.SetPadding(0, topInset, 0, 0);
-
-				return WindowInsetsCompat.Consumed;
-			}
-		}
-
 		void OnShellContentPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
 			if (e.PropertyName == ShellContent.TitleProperty.PropertyName && sender is ShellContent shellContent)
@@ -222,6 +198,12 @@ namespace Microsoft.Maui.Controls.Platform.Compatibility
 		{
 			if (_rootView != null)
 			{
+				// Clean up the coordinator layout and local listener first
+				if (_rootView is not null)
+				{
+					MauiWindowInsetListener.RemoveViewWithLocalListener(_rootView);
+				}
+
 				UnhookEvents();
 
 				_shellContext?.Shell?.Toolbar?.Handler?.DisconnectHandler();

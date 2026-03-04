@@ -159,7 +159,7 @@ namespace Microsoft.Maui.Controls.Platform.Compatibility
 
 		void AView.IOnClickListener.OnClick(AView v)
 		{
-			var backButtonHandler = Shell.GetBackButtonBehavior(Page);
+			var backButtonHandler = Shell.GetEffectiveBackButtonBehavior(Page);
 			var isEnabled = backButtonHandler.GetPropertyIfSet(BackButtonBehavior.IsEnabledProperty, true);
 
 			if (isEnabled)
@@ -233,6 +233,10 @@ namespace Microsoft.Maui.Controls.Platform.Compatibility
 		{
 			try
 			{
+				// Call OnBackButtonPressed to allow the page to intercept navigation
+				if (Page?.SendBackButtonPressed() == true)
+					return;
+
 				await Page.Navigation.PopAsync();
 			}
 			catch (Exception exc)
@@ -255,7 +259,7 @@ namespace Microsoft.Maui.Controls.Platform.Compatibility
 			if (newPage != null)
 			{
 				newPage.PropertyChanged += OnPagePropertyChanged;
-				_backButtonBehavior = Shell.GetBackButtonBehavior(newPage);
+				_backButtonBehavior = Shell.GetEffectiveBackButtonBehavior(newPage);
 
 				if (_backButtonBehavior != null)
 					_backButtonBehavior.PropertyChanged += OnBackButtonBehaviorChanged;
@@ -309,7 +313,7 @@ namespace Microsoft.Maui.Controls.Platform.Compatibility
 				UpdateNavBarHasShadow(Page);
 			else if (e.PropertyName == Shell.BackButtonBehaviorProperty.PropertyName)
 			{
-				var backButtonHandler = Shell.GetBackButtonBehavior(Page);
+				var backButtonHandler = Shell.GetEffectiveBackButtonBehavior(Page);
 
 				if (_backButtonBehavior != null)
 					_backButtonBehavior.PropertyChanged -= OnBackButtonBehaviorChanged;
@@ -407,9 +411,10 @@ namespace Microsoft.Maui.Controls.Platform.Compatibility
 				drawerLayout.AddDrawerListener(_drawerToggle);
 			}
 
-			var backButtonHandler = Shell.GetBackButtonBehavior(page);
+			var backButtonHandler = Shell.GetEffectiveBackButtonBehavior(page);
 			var text = backButtonHandler.GetPropertyIfSet(BackButtonBehavior.TextOverrideProperty, String.Empty);
 			var command = backButtonHandler.GetPropertyIfSet<ICommand>(BackButtonBehavior.CommandProperty, null);
+			var backButtonVisibleFromBehavior = backButtonHandler.GetPropertyIfSet(BackButtonBehavior.IsVisibleProperty, true);
 			bool isEnabled = _shell.Toolbar.BackButtonEnabled;
 			//Add the FlyoutIcon only if the FlyoutBehavior is Flyout
 			var image = _flyoutBehavior == FlyoutBehavior.Flyout ? GetFlyoutIcon(backButtonHandler, page) : null;
@@ -473,14 +478,13 @@ namespace Microsoft.Maui.Controls.Platform.Compatibility
 				defaultDrawerArrowDrawable = true;
 			}
 
-			if (icon != null)
-				icon.Progress = (CanNavigateBack) ? 1 : 0;
+			icon?.Progress = (CanNavigateBack) ? 1 : 0;
 
 			if (command != null || CanNavigateBack)
 			{
 				_drawerToggle.DrawerIndicatorEnabled = false;
 
-				if (backButtonVisible)
+				if (backButtonVisibleFromBehavior && (backButtonVisible || !defaultDrawerArrowDrawable))
 					toolbar.NavigationIcon = icon;
 			}
 			else if (_flyoutBehavior == FlyoutBehavior.Flyout || !defaultDrawerArrowDrawable)
@@ -540,7 +544,7 @@ namespace Microsoft.Maui.Controls.Platform.Compatibility
 
 		protected virtual void UpdateToolbarIconAccessibilityText(AToolbar toolbar, Shell shell)
 		{
-			var backButtonHandler = Shell.GetBackButtonBehavior(Page);
+			var backButtonHandler = Shell.GetEffectiveBackButtonBehavior(Page);
 			var image = GetFlyoutIcon(backButtonHandler, Page);
 			var text = backButtonHandler.GetPropertyIfSet(BackButtonBehavior.TextOverrideProperty, String.Empty);
 			var automationId = image?.AutomationId ?? text;

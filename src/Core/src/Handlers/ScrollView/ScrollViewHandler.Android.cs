@@ -32,6 +32,11 @@ namespace Microsoft.Maui.Handlers
 			base.DisconnectHandler(platformView);
 			platformView.ScrollChange -= ScrollChange;
 		}
+		public override void SetVirtualView(IView view)
+		{
+			base.SetVirtualView(view);
+			PlatformView.CrossPlatformLayout = VirtualView as ICrossPlatformLayout;
+		}
 
 		public override Size GetDesiredSize(double widthConstraint, double heightConstraint)
 		{
@@ -191,15 +196,26 @@ namespace Microsoft.Maui.Handlers
 
 		static void UpdateInsetView(IScrollView scrollView, IScrollViewHandler handler, ICrossPlatformLayout crossPlatformLayout)
 		{
-			if (scrollView.PresentedContent == null || handler.MauiContext == null)
+			if (handler.MauiContext is null)
 			{
+				return;
+			}
+
+			// Find existing inset panel once
+			var currentPaddingLayer = FindInsetPanel(handler);
+
+			// If PresentedContent is null, clean up any existing content and return
+			if (scrollView.PresentedContent is null)
+			{
+				currentPaddingLayer?.RemoveAllViews();
 				return;
 			}
 
 			var nativeContent = scrollView.PresentedContent.ToPlatform(handler.MauiContext);
 
-			if (FindInsetPanel(handler) is ContentViewGroup currentPaddingLayer)
+			if (currentPaddingLayer is not null)
 			{
+				// Only update if content has changed or is missing
 				if (currentPaddingLayer.ChildCount == 0 || currentPaddingLayer.GetChildAt(0) != nativeContent)
 				{
 					currentPaddingLayer.RemoveAllViews();
