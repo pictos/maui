@@ -698,6 +698,23 @@ public class MemoryTests : ControlsHandlerTestBase
 
 		Assert.True(AnimationExtensions.TweenersCounter <= 2);
 	}
+
+
+	[Fact]
+	public async Task FailIfLeak()
+	{
+		var page = new ContentPage { Title = "Page 1" };
+
+		await CreateHandlerAndAddToWindow(new Window(page), async () =>
+		{
+			await OnLoadedAsync(page);
+
+		});
+
+		await AssertionExtensions.WaitForGC(new WeakReference(page));
+
+		GC.KeepAlive(page);
+	}
 }
 
 sealed class AnimationPage : ContentPage
